@@ -1,0 +1,29 @@
+/* ===== <COLORS> =================================== */
+
+:root {
+	/* base */
+	--black: #08080B;
+	--white: #ffffff;
+	/* gray scale */
+	--gray1: #0C0C0F;
+	--gray2: #2A2A2F;
+	--gray3: #3A3A40;
+	--gray4: #454553;
+	--gray5: #494951;
+	--gray6: #636270;
+	--gray7: #959597;
+	--gray8: #181820;
+}
+
+/* ===== <LAYOUT_STYLES> =================================== */
+
+.wrapper {
+	height: 100%;
+	overflow: auto;
+	background-color: var(--black);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+/* ===== <UI> =================================== */
