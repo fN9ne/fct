@@ -4,10 +4,10 @@ import Keyboard from "./components/Keyboard";
 import Mouse from "./components/Mouse";
 import Widget from "./components/UI/Widget";
 import { useActions } from "./hooks/useActions";
-import socket from "./socket";
 import { Data } from "./types";
 import { useAppSelector } from "./hooks/useAppSelector";
-import Title from "./components/UI/Title";
+import useRealtimeData from "./hooks/useRealtimeData";
+import supabase from "./services/supabase";
 
 const App: FC = () => {
 	const { updateData, updateLastButtonClicked, updateLastKeyPressed } = useActions();
@@ -19,24 +19,21 @@ const App: FC = () => {
 
 	const [formattedLastKeyPressTime, setFormattedLastKeyPressTime] = useState<string>("");
 	const [formattedLastClickTime, setFormattedLastClickTime] = useState<string>("");
-	const [serverActive, setServerActive] = useState<boolean>(false);
 
 	useEffect(() => {
-		const updateConnectionStatus = () => {
-			setServerActive(socket.connected);
+		const getData = async () => {
+			const { data } = await supabase.from("clickTracker").select("*");
+
+			if (data) {
+				updateData(data[0]);
+			}
 		};
 
-		socket.on("connect", updateConnectionStatus);
-		socket.on("disconnect", updateConnectionStatus);
-
-		return () => {
-			socket.off("connect", updateConnectionStatus);
-			socket.off("disconnect", updateConnectionStatus);
-		};
+		getData();
 	}, []);
 
-	useEffect(() => {
-		const handleUpdate = (data: Data) => {
+	const handleUpdate = (data: Data | null) => {
+		if (data) {
 			/* keyboard */
 
 			const prevKeyboardData = prevKeyboardDataRef.current;
@@ -77,24 +74,12 @@ const App: FC = () => {
 
 			updateData(data);
 
-			console.log(data);
-
 			prevKeyboardDataRef.current = data.keyboardCount;
 			prevMouseDataRef.current = [lmbCount, rmbCount];
-		};
+		}
+	};
 
-		const handleConnect = () => {
-			socket.emit("getInitialData");
-		};
-
-		socket.on("update", handleUpdate);
-		socket.on("connect", handleConnect);
-
-		return () => {
-			socket.off("update", handleUpdate);
-			socket.off("connect", handleConnect);
-		};
-	}, []);
+	useRealtimeData(handleUpdate);
 
 	useEffect(() => {
 		if (lastKeyPressTime) {
@@ -168,23 +153,19 @@ const App: FC = () => {
 
 	return (
 		<>
-			{serverActive ? (
-				<Flex column gap={40}>
-					<Flex gap={40}>
-						<Keyboard />
-						<Mouse />
-					</Flex>
-					<Flex gap={24}>
-						<Widget label="Total presses" value={getTotalKeyPressCount(keyboardCount)} />
-						<Widget label="Total clicks" value={getTotalClicksCount(rmbCount, lmbCount)} />
-						<Widget label="Most pressed key" value={getMostPressedKey(keyboardCount) || "No"} />
-						<Widget label="Last click time" value={formattedLastClickTime} />
-						<Widget label="Last key press time" value={formattedLastKeyPressTime} />
-					</Flex>
+			<Flex column gap={40}>
+				<Flex gap={40}>
+					<Keyboard />
+					<Mouse />
 				</Flex>
-			) : (
-				<Title>Ой, тут ошибка 503. Марк скорее всего спит и сервер выключен.</Title>
-			)}
+				<Flex gap={24}>
+					<Widget label="Total presses" value={getTotalKeyPressCount(keyboardCount)} />
+					<Widget label="Total clicks" value={getTotalClicksCount(rmbCount, lmbCount)} />
+					<Widget label="Most pressed key" value={getMostPressedKey(keyboardCount) || "No"} />
+					<Widget label="Last click time" value={formattedLastClickTime} />
+					<Widget label="Last key press time" value={formattedLastKeyPressTime} />
+				</Flex>
+			</Flex>
 		</>
 	);
 };

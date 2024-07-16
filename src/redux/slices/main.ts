@@ -2,6 +2,8 @@ import { Data } from "@/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: Data & { lastKeyPressed: string | null; lastButtonClicked: string | null } = {
+	id: 0,
+	date: "16.07.2024",
 	keyboardCount: {},
 	lastClickTime: null,
 	lastButtonClicked: null,
