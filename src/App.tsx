@@ -19,7 +19,7 @@ const App: FC = () => {
 
 	const [formattedLastKeyPressTime, setFormattedLastKeyPressTime] = useState<string>("");
 	const [formattedLastClickTime, setFormattedLastClickTime] = useState<string>("");
-	const [serverActive, setServerActive] = useState<boolean>(true);
+	const [serverActive, setServerActive] = useState<boolean>(false);
 
 	useEffect(() => {
 		const updateConnectionStatus = () => {
