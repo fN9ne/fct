@@ -22,7 +22,7 @@ const App: FC = () => {
 
 	useEffect(() => {
 		const getData = async () => {
-			const { data } = await supabase.from("clickTracker").select("*").eq("date", new Date().toDateString());
+			const { data } = await supabase.from("clickTracker").select("*").eq("date", new Date().toLocaleDateString());
 
 			if (data) {
 				updateData(data[0]);
