@@ -5,11 +5,14 @@ import App from "./App.tsx";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { setupStore } from "./redux/store.ts";
+import { BrowserRouter } from "react-router-dom";
 
 const store = setupStore();
 
 ReactDOM.createRoot(document.querySelector(".wrapper")!).render(
-	<Provider store={store}>
-		<App />
-	</Provider>
+	<BrowserRouter>
+		<Provider store={store}>
+			<App />
+		</Provider>
+	</BrowserRouter>
 );

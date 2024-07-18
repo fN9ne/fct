@@ -13,17 +13,23 @@
 	--gray6: #636270;
 	--gray7: #959597;
 	--gray8: #181820;
+	/* primary */
+	--primary: #4FB2AD;
 }
 
 /* ===== <LAYOUT_STYLES> =================================== */
 
 .wrapper {
-	height: 100%;
+	min-height: 100%;
 	overflow: auto;
 	background-color: var(--black);
 	display: flex;
 	justify-content: center;
-	align-items: center;
+	padding: 50px 0;
+}
+
+.content>div {
+	height: 100%;
 }
 
 /* ===== <UI> =================================== */
