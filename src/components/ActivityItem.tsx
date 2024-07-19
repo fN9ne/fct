@@ -4,6 +4,8 @@ import styled from "styled-components";
 import Flex from "./Flex";
 import { months } from "@/date";
 import { useAppSelector } from "@/hooks/useAppSelector";
+import { Link } from "react-router-dom";
+import Badge from "./UI/Badge";
 
 const shouldForwardProp = (prop: string) => !["isActive"].includes(prop);
 
@@ -18,9 +20,25 @@ const StyledActivityItem = styled(Flex).withConfig({
 	border-radius: 12px;
 	padding: 8px;
 	border: 2px solid ${(props) => (props.isActive ? "rgba(79, 178, 173, 0.3)" : "transparent")};
+	transition: 250ms ease-in;
 
-	& > img {
+	.image {
+		width: 100%;
+		aspect-ratio: 1 / 1;
+		overflow: hidden;
 		border-radius: 12px;
+
+		& > img {
+			transition: 500ms ease-out;
+		}
+	}
+
+	&:hover {
+		.image > img {
+			scale: 1.05;
+		}
+
+		opacity: 0.75;
 	}
 `;
 
@@ -130,29 +148,36 @@ const ActivityItem: FC<IActivityEntry> = ({ appName, startTime, duration }) => {
 	};
 
 	return (
-		<StyledActivityItem column gap={12} isActive={isActive}>
-			<Image src={`/appImages/${appName.toLowerCase().replace(".exe", ".jpg")}`} alt={appName} />
-			<Content column gap={12} isActive={isActive}>
-				<ContentHead gap={5} alignItems={"center"}>
-					<img src={`/appIcons/${appName.toLowerCase().replace(".exe", ".png")}`} alt="icon" />
-					<ActivityName>{getActivityName(appName)}</ActivityName>
-				</ContentHead>
-				<Flex column gap={8}>
-					<Flex justifyContent="space-between">
-						<Label>{isActive ? "Запущено" : "Последний запуск"}</Label>
-						<Value>
-							{getDateTime(
-								isActive ? temp.find((item) => item.appName === appName)?.startTime || new Date().toString() : startTime
-							)}
-						</Value>
+		<Link to={`/activity/${appName}`}>
+			<StyledActivityItem column gap={12} isActive={isActive}>
+				<div className="image">
+					<Image src={`/appImages/${appName.toLowerCase().replace(".exe", ".jpg")}`} alt={appName} />
+				</div>
+				<Content column gap={12} isActive={isActive}>
+					<ContentHead justifyContent="space-between" alignItems={"center"}>
+						<Flex gap={5} alignItems={"center"}>
+							<img src={`/appIcons/${appName.toLowerCase().replace(".exe", ".png")}`} alt="icon" />
+							<ActivityName>{getActivityName(appName)}</ActivityName>
+						</Flex>
+						{isActive && <Badge>ЗАПУЩЕНО</Badge>}
+					</ContentHead>
+					<Flex column gap={8}>
+						<Flex justifyContent="space-between">
+							<Label>{isActive ? "Запущено" : "Последний запуск"}</Label>
+							<Value>
+								{getDateTime(
+									isActive ? temp.find((item) => item.appName === appName)?.startTime || new Date().toString() : startTime
+								)}
+							</Value>
+						</Flex>
+						<Flex justifyContent="space-between">
+							<Label>{isActive ? "Текущая" : "Последняя"} сессия</Label>
+							<Value>{isActive ? "сейчас" : getTime(duration)}</Value>
+						</Flex>
 					</Flex>
-					<Flex justifyContent="space-between">
-						<Label>{isActive ? "Текущая" : "Последняя"} сессия</Label>
-						<Value>{isActive ? "сейчас" : getTime(duration)}</Value>
-					</Flex>
-				</Flex>
-			</Content>
-		</StyledActivityItem>
+				</Content>
+			</StyledActivityItem>
+		</Link>
 	);
 };
 

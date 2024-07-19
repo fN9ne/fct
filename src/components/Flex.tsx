@@ -24,12 +24,12 @@ const Flex = styled.div.withConfig({
 	${(props) => (props.flexWrap ? "flex-wrap: wrap;" : "")}
 	${(props) => (props.column ? "flex-direction: column;" : "")}
 	${(props) => (props.gap ? `gap: ${props.gap}px;` : "")}
-	${(props) => (props.alignItems ? `align-items: ${props.alignItems}` : "")}
-	${(props) => (props.justifyContent ? `justify-content: ${props.justifyContent}` : "")}
+	${(props) => (props.alignItems ? `align-items: ${props.alignItems};` : "")}
+	${(props) => (props.justifyContent ? `justify-content: ${props.justifyContent};` : "")}
 	${(props) =>
 		props.itemsInRow
 			? `
-		& > div {
+		& > div, & > a {
 			flex: 0 0 ${calcChildWidth(props.gap || 0, props.itemsInRow)};
 		}
 	`

@@ -1,10 +1,8 @@
 import ActivityItem from "@/components/ActivityItem";
 import Flex from "@/components/Flex";
-import { useActions } from "@/hooks/useActions";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import { IActivityEntry } from "@/redux/slices/activity";
-import socket from "@/socket";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -15,8 +13,6 @@ const Container = styled.div`
 `;
 
 const ActivityTracker: FC = () => {
-	const { setActivities, setTempActivities } = useActions();
-
 	const { activity } = useAppSelector((state) => state.activity);
 
 	const getLastEntries = (data: IActivityEntry[]): IActivityEntry[] => {
@@ -32,25 +28,6 @@ const ActivityTracker: FC = () => {
 
 		return Array.from(appMap.values());
 	};
-
-	useEffect(() => {
-		const handleConnect = () => {
-			socket.emit("getInitialData");
-		};
-
-		socket.on("update", (data) => {
-			setActivities(data.data);
-			setTempActivities(data.temp);
-		});
-		socket.on("connect", handleConnect);
-
-		return () => {
-			socket.off("update", (data) => {
-				setActivities(data.data);
-			});
-			socket.off("connect", handleConnect);
-		};
-	}, []);
 
 	return (
 		<Container>
