@@ -158,6 +158,7 @@ const ActivityPage: FC = () => {
 			{ process: "osu!.exe", name: "osu!" },
 			{ process: "Lethal Company.exe", name: "Lethal Company" },
 			{ process: "javaw.exe", name: "Minecraft" },
+			{ process: "Ravenswatch.exe", name: "Ravenswatch" },
 		];
 
 		return appNames.find((app) => app.process === process)?.name || "";
