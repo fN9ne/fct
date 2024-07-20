@@ -203,12 +203,12 @@ const ActivityItem: FC<IActivityEntry> = ({ appName, startTime, duration }) => {
 							</Value>
 						</Flex>
 						<Flex justifyContent="space-between">
-							<Label>Последняя сессия</Label>
-							<Value>{isActive ? "сейчас" : getTime(duration)}</Value>
-						</Flex>
-						<Flex justifyContent="space-between">
 							<Label>Времени за месяц</Label>
 							<Value>{getActivityDurationByMonth(activity, appName)}</Value>
+						</Flex>
+						<Flex justifyContent="space-between">
+							<Label>Последняя сессия</Label>
+							<Value>{isActive ? "сейчас" : getTime(duration)}</Value>
 						</Flex>
 						<Flex justifyContent="space-between">
 							<Label>Запусков за месяц</Label>
