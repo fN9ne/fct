@@ -63,7 +63,7 @@ const History = styled.div`
 	background-color: var(--gray8);
 	padding: 24px 20px;
 	border-radius: 12px;
-	height: 228px;
+	max-height: 228px;
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
@@ -142,7 +142,7 @@ const ActivityPage: FC = () => {
 		const hoursText = `${totalHours} ${getHoursText(totalHours)}`;
 		const minutesText = `${remainingMinutes} ${getMinutesText(remainingMinutes)}`;
 
-		return `${totalHours > 0 ? `${hoursText}, ` : ""} ${totalHours === 0 && totalMinutes === 0 ? "меньше минуты" : minutesText}`;
+		return `${totalHours > 0 ? `${hoursText} ` : ""} ${totalHours === 0 && totalMinutes === 0 ? "меньше минуты" : minutesText}`;
 	};
 
 	/* функция для получения названия приложения */
@@ -266,7 +266,7 @@ const ActivityPage: FC = () => {
 							) : null}
 							<Flex>
 								<Label>Запусков за месяц</Label>
-								<Value>{activity.filter((entry) => entry.appName === name).length}</Value>
+								<Value>{getActivityByMonth(activity).length}</Value>
 							</Flex>
 						</Flex>
 					</Content>

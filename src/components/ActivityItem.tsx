@@ -80,7 +80,7 @@ const Image = styled.img`
 `;
 
 const ActivityItem: FC<IActivityEntry> = ({ appName, startTime, duration }) => {
-	const { temp } = useAppSelector((state) => state.activity);
+	const { temp, activity } = useAppSelector((state) => state.activity);
 
 	const isActive = [...temp].map((item) => item.appName).includes(appName);
 
@@ -148,6 +148,37 @@ const ActivityItem: FC<IActivityEntry> = ({ appName, startTime, duration }) => {
 		}
 	};
 
+	/* функция для получения entry's за месяц */
+
+	const getActivityByMonth = (activities: IActivityEntry[], name: string | null = null): IActivityEntry[] => {
+		const currentDate = new Date();
+		const oneMonthAgo = new Date();
+
+		oneMonthAgo.setMonth(currentDate.getMonth() - 1);
+
+		return activities.filter((activity) => {
+			const startTime = new Date(activity.startTime);
+			return startTime >= oneMonthAgo && startTime <= currentDate && (name !== null ? activity.appName === name : true);
+		});
+	};
+
+	/* функция для получения проведённого времени за месяц */
+
+	const getActivityDurationByMonth = (activities: IActivityEntry[], appName: string): string => {
+		const monthlyActivities = getActivityByMonth(activities.filter((a) => a.appName === appName));
+
+		const totalDurationMs = monthlyActivities.reduce((total, activity) => total + activity.duration, 0);
+
+		const totalMinutes = Math.floor(totalDurationMs / 60000);
+		const totalHours = Math.floor(totalMinutes / 60);
+		const remainingMinutes = totalMinutes % 60;
+
+		const hoursText = `${totalHours} ${getHoursText(totalHours)}`;
+		const minutesText = `${remainingMinutes} ${getMinutesText(remainingMinutes)}`;
+
+		return `${totalHours > 0 ? `${hoursText} ` : ""} ${totalHours === 0 && totalMinutes === 0 ? "меньше минуты" : minutesText}`;
+	};
+
 	return (
 		<Link to={`/activity/${appName}`}>
 			<StyledActivityItem column gap={12} isActive={isActive}>
@@ -172,8 +203,16 @@ const ActivityItem: FC<IActivityEntry> = ({ appName, startTime, duration }) => {
 							</Value>
 						</Flex>
 						<Flex justifyContent="space-between">
-							<Label>{isActive ? "Текущая" : "Последняя"} сессия</Label>
+							<Label>Последняя сессия</Label>
 							<Value>{isActive ? "сейчас" : getTime(duration)}</Value>
+						</Flex>
+						<Flex justifyContent="space-between">
+							<Label>Времени за месяц</Label>
+							<Value>{getActivityDurationByMonth(activity, appName)}</Value>
+						</Flex>
+						<Flex justifyContent="space-between">
+							<Label>Запусков за месяц</Label>
+							<Value>{getActivityByMonth(activity, appName).length}</Value>
 						</Flex>
 					</Flex>
 				</Content>
