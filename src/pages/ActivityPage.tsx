@@ -160,6 +160,7 @@ const ActivityPage: FC = () => {
 			{ process: "javaw.exe", name: "Minecraft" },
 			{ process: "Ravenswatch.exe", name: "Ravenswatch" },
 			{ process: "Stardew Valley.exe", name: "Stardew Valley" },
+			{ process: "Moonlighter.exe", name: "Moonlighter" },
 		];
 
 		return appNames.find((app) => app.process === process)?.name || "";
