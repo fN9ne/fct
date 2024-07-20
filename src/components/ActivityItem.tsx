@@ -96,6 +96,7 @@ const ActivityItem: FC<IActivityEntry> = ({ appName, startTime, duration }) => {
 			{ process: "Lethal Company.exe", name: "Lethal Company" },
 			{ process: "javaw.exe", name: "Minecraft" },
 			{ process: "Ravenswatch.exe", name: "Ravenswatch" },
+			{ process: "Stardew Valley.exe", name: "Stardew Valley" },
 		];
 
 		return appNames.find((app) => app.process === process)?.name || "";
