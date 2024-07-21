@@ -23,7 +23,8 @@ const Main = styled(Flex).withConfig({ shouldForwardProp })<IActive>`
 
 const Image = styled.img`
 	aspect-ratio: 1 / 1;
-	width: 152px;
+	width: 158px;
+	flex: 0 0 158px;
 	border-radius: 12px;
 `;
 
