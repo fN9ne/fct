@@ -117,7 +117,7 @@ const ActivityPage: FC = () => {
 
 	/* функция для получения entry's за месяц */
 
-	const getActivityByMonth = (activities: IActivityEntry[]): IActivityEntry[] => {
+	const getActivityByMonth = (activities: IActivityEntry[], name: string | null = null): IActivityEntry[] => {
 		const currentDate = new Date();
 		const oneMonthAgo = new Date();
 
@@ -125,14 +125,14 @@ const ActivityPage: FC = () => {
 
 		return activities.filter((activity) => {
 			const startTime = new Date(activity.startTime);
-			return startTime >= oneMonthAgo && startTime <= currentDate;
+			return startTime >= oneMonthAgo && startTime <= currentDate && (name !== null ? activity.appName === name : true);
 		});
 	};
 
 	/* функция для получения проведённого времени за месяц */
 
 	const getActivityDurationByMonth = (activities: IActivityEntry[], appName: string): string => {
-		const monthlyActivities = getActivityByMonth(activities.filter((a) => a.appName === appName));
+		const monthlyActivities = getActivityByMonth(activities, appName);
 
 		const totalDurationMs = monthlyActivities.reduce((total, activity) => total + activity.duration, 0);
 
@@ -269,7 +269,7 @@ const ActivityPage: FC = () => {
 							) : null}
 							<Flex>
 								<Label>Запусков за месяц</Label>
-								<Value>{getActivityByMonth(activity).length}</Value>
+								<Value>{getActivityByMonth(activity, currentActivity.appName).length}</Value>
 							</Flex>
 						</Flex>
 					</Content>
