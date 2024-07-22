@@ -1,5 +1,5 @@
 import { IActivityEntry } from "@/redux/slices/activity";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import Flex from "./Flex";
 import { months } from "@/date";
@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import Badge from "./UI/Badge";
 
 import PlayIcon from "@icons/play.svg?react";
+import Loader from "./Loader";
 
 const shouldForwardProp = (prop: string) => !["isActive"].includes(prop);
 
@@ -123,6 +124,14 @@ const ActivityItem: FC<IActivityEntry> = ({ appName, startTime, duration }) => {
 	const { temp, activity } = useAppSelector((state) => state.activity);
 
 	const isActive = [...temp].map((item) => item.appName).includes(appName);
+
+	const [isStarting, setIsStarting] = useState<boolean>(false);
+
+	useEffect(() => {
+		if (isActive) {
+			setIsStarting(false);
+		}
+	}, [isActive]);
 
 	const getActivityName = (process: string): string => {
 		const appNames: { process: string; name: string }[] = [
@@ -254,6 +263,7 @@ const ActivityItem: FC<IActivityEntry> = ({ appName, startTime, duration }) => {
 						event.preventDefault();
 						event.stopPropagation();
 						handleRunApp(appName);
+						setIsStarting(true);
 					}}
 				>
 					<Image src={`/appImages/${appName.toLowerCase().replace(".exe", ".jpg")}`} alt={appName} />
@@ -268,6 +278,7 @@ const ActivityItem: FC<IActivityEntry> = ({ appName, startTime, duration }) => {
 							<ActivityName>{getActivityName(appName)}</ActivityName>
 						</Flex>
 						{isActive && <Badge>ЗАПУЩЕНО</Badge>}
+						{isStarting && <Loader />}
 					</ContentHead>
 					<Flex column gap={8}>
 						<Flex justifyContent="space-between">
