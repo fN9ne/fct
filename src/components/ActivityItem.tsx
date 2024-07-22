@@ -98,6 +98,7 @@ const ActivityItem: FC<IActivityEntry> = ({ appName, startTime, duration }) => {
 			{ process: "Ravenswatch.exe", name: "Ravenswatch" },
 			{ process: "Stardew Valley.exe", name: "Stardew Valley" },
 			{ process: "Moonlighter.exe", name: "Moonlighter" },
+			{ process: "Ghost Watchers.exe", name: "Ghost Watchers" },
 		];
 
 		return appNames.find((app) => app.process === process)?.name || "";
