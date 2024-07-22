@@ -7,6 +7,8 @@ import { useAppSelector } from "@/hooks/useAppSelector";
 import { Link } from "react-router-dom";
 import Badge from "./UI/Badge";
 
+import PlayIcon from "@icons/play.svg?react";
+
 const shouldForwardProp = (prop: string) => !["isActive"].includes(prop);
 
 interface IStyledActivityItem {
@@ -27,9 +29,47 @@ const StyledActivityItem = styled(Flex).withConfig({
 		aspect-ratio: 1 / 1;
 		overflow: hidden;
 		border-radius: 12px;
+		position: relative;
 
 		& > img {
 			transition: 500ms ease-out;
+		}
+
+		.play-icon {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.35);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			opacity: 0;
+			visibility: hidden;
+			transition: 400ms ease-out;
+
+			svg {
+				width: 100px;
+				height: 100px;
+
+				path {
+					fill: var(--white);
+					opacity: 0.5;
+					transition: 350ms ease-in-out 150ms;
+				}
+			}
+		}
+
+		&:hover {
+			.play-icon {
+				opacity: 1;
+				visibility: visible;
+
+				svg path {
+					opacity: 1;
+				}
+			}
 		}
 	}
 
@@ -101,7 +141,30 @@ const ActivityItem: FC<IActivityEntry> = ({ appName, startTime, duration }) => {
 			{ process: "Ghost Watchers.exe", name: "Ghost Watchers" },
 		];
 
-		return appNames.find((app) => app.process === process)?.name || "";
+		const activityName = appNames.find((item) => item.process === process)?.name;
+
+		return activityName || appName;
+	};
+
+	const handleRunApp = async (appName: string) => {
+		try {
+			const response = await fetch("http://localhost:3002/api/run-app", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ appName }),
+			});
+
+			if (!response.ok) {
+				throw new Error(`Error: ${response.statusText}`);
+			}
+
+			const result = await response.text();
+			console.log(result);
+		} catch (error) {
+			console.error(`Failed to run app:`, error);
+		}
 	};
 
 	const getDateTime = (dateString: string): string => {
@@ -185,8 +248,18 @@ const ActivityItem: FC<IActivityEntry> = ({ appName, startTime, duration }) => {
 	return (
 		<Link to={`/activity/${appName}`}>
 			<StyledActivityItem column gap={12} isActive={isActive}>
-				<div className="image">
+				<div
+					className="image"
+					onClick={(event) => {
+						event.preventDefault();
+						event.stopPropagation();
+						handleRunApp(appName);
+					}}
+				>
 					<Image src={`/appImages/${appName.toLowerCase().replace(".exe", ".jpg")}`} alt={appName} />
+					<div className="play-icon">
+						<PlayIcon />
+					</div>
 				</div>
 				<Content column gap={12} isActive={isActive}>
 					<ContentHead justifyContent="space-between" alignItems={"center"}>
