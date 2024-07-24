@@ -19,14 +19,15 @@ const App: FC = () => {
 		};
 
 		socket.on("update", (data) => {
-			setActivities(data.data);
-			setTempActivities(data.temp);
+			setActivities(data.timeEntries);
+			setTempActivities(data.timeEntriesTemp);
 		});
 		socket.on("connect", handleConnect);
 
 		return () => {
 			socket.off("update", (data) => {
-				setActivities(data.data);
+				setActivities(data.timeEntries);
+				setTempActivities(data.timeEntriesTemp);
 			});
 			socket.off("connect", handleConnect);
 		};
