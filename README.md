@@ -6,7 +6,7 @@
 
 > 👾📝 3. Как приятный бонус приложение так же выводит некоторую часть информации в активность дискорда:
 >
-> <img src="/readme_pictures/aa.png" width="300" />  <img src="/readme_pictures/bb.png" width="300" />  <img src="/readme_pictures/cc.png" width="300" />
+> <img src="/readme_pictures/aa.png" width="268" />  <img src="/readme_pictures/bb.png" width="268" />  <img src="/readme_pictures/cc.png" width="268" />
 
 ### 👨🏻‍💻🗣 «А что это за язык программирования?»
 #### 🎨 Frontend
